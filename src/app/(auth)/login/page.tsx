@@ -13,7 +13,7 @@ const Login = () => {
 
     const handleForm = async (e: React.FormEvent) => {
       e.preventDefault()
-      setError('') // Reset error state on new submission
+      setError('') 
       setIsLoading(true)
 
       const formdata = new URLSearchParams()

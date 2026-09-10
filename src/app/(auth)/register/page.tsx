@@ -3,10 +3,11 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'motion/react';
 
-const Login = () => {
+
+const Register = () => {
   const [email, setEmail] = useState<string>('')
+  const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const router = useRouter()
@@ -14,9 +15,9 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    const payload = { email: email, password: password }
+    const payload = {username : username, email: email, password: password }
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/login`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/signup`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
@@ -31,8 +32,7 @@ const Login = () => {
       
       setEmail('')
       setPassword('')
-      // Route to your home/dashboard page after successful login
-      router.push('/') 
+      router.push('/login') 
     } catch (err) {
       console.error('unable to send login request', err)
     } finally {
@@ -58,6 +58,25 @@ const Login = () => {
             </p>
           </div>
           <form action="" className='flex flex-col gap-5 border-b-2 pb-5' onSubmit={handleSubmit}>
+
+              <div className='flex flex-col gap-3'>
+              <label htmlFor="" className='text-lg font-semibold uppercase tracking-wide'>Email</label>
+              <div className='relative w-full'>
+                <input 
+                type="text" 
+                value={username}
+                onChange={(e)=>setUsername(e.target.value)}
+                required
+                className='bg-white block w-full pl-12 text-black border-2 rounded-2xl py-3 outline-none font-semibold' 
+                placeholder='John_Doe' 
+              />
+              <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                  <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
             
             <div className='flex flex-col gap-3'>
               <label htmlFor="" className='text-lg font-semibold uppercase tracking-wide'>Email</label>
@@ -106,11 +125,11 @@ const Login = () => {
           </form>
           
           <p className='text-center font-semibold tracking-wider text-lg'>
-            Don't have an account? <Link href={'/register'} className='border-b-2 border-black font-bold'>Register</Link>
+            Have an account <Link href={'/login'} className='border-b-2 border-black font-bold'>Login</Link>
           </p>
       </div>
     </div>
   )
 }
 
-export default Login
+export default Register
