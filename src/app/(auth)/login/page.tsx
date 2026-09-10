@@ -5,47 +5,50 @@ import { ArrowRight, CircleCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 const Login = () => {
-    const [username, setUsername] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
-    const [error, setError] = useState<string>('')
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const router = useRouter()
+  const [username, setUsername] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [error, setError] = useState<string>('')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const router = useRouter()
 
-    const handleForm = async (e: React.FormEvent) => {
-      e.preventDefault()
-      setError('') 
-      setIsLoading(true)
+  const handleForm = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('') 
+    setIsLoading(true)
 
-      const formdata = new URLSearchParams()
-      formdata.append('username', username)
-      formdata.append('password', password)
+    const formdata = new URLSearchParams()
+    formdata.append('username', username)
+    formdata.append('password', password)
 
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/signin`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: formdata
-        })
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL 
 
-        if (!res.ok) {
-            throw new Error("Invalid login credentials")
-        }
+    try {
+      const res = await fetch(`${backendUrl}/user/signin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: formdata
+      })
 
-        const data = await res.json()
-        const token = data.access_token
-        
-        document.cookie = `token=${token}; path=/; max-age=900; SameSite=Lax`
-        router.push('/')
-        
-      } catch (err: any) {
-        console.error('An error occurred during login', err)
-        setError(err.message || "Something went wrong. Please try again.")
-      } finally {
-        setIsLoading(false)
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}))
+        throw new Error(errorData.detail || errorData.message || "Invalid login credentials")
       }
+
+      const data = await res.json()
+      const token = data.access_token
+      
+      document.cookie = `token=${token}; path=/; max-age=900; SameSite=Lax`
+      router.push('/')
+      
+    } catch (err: any) {
+      console.error('An error occurred during login:', err)
+      setError(err.message || "Something went wrong. Please try again.")
+    } finally {
+      setIsLoading(false)
     }
+  }
 
   return (
     <div className='min-h-screen bg-orange-50 w-full flex justify-center items-center p-4'>
@@ -74,7 +77,7 @@ const Login = () => {
             )}
 
             <div className='flex flex-col gap-3'>
-              <label htmlFor="username" className='text-lg font-semibold uppercase tracking-wide'>Username </label>
+              <label htmlFor="username" className='text-lg font-semibold uppercase tracking-wide'>Username</label>
               <div className='relative w-full'>
                 <input
                  id="username"
@@ -83,7 +86,7 @@ const Login = () => {
                  value={username}
                  onChange={(e)=>setUsername(e.target.value)}
                  className='bg-white block w-full pl-12 pr-4 text-black border-2 border-black rounded-2xl py-3 outline-none font-semibold focus:ring-2 focus:ring-black/50 transition-all' 
-                 placeholder='Choose a username' 
+                 placeholder='Enter your username' 
                 />
                 <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                   <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
