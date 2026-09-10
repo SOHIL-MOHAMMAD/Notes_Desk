@@ -21,7 +21,7 @@ const Login = () => {
       formdata.append('password', password)
 
       try {
-        const res = await fetch('https://notes-backend-uvim.onrender.com/user/signin', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/signin`, {
           method: "POST",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded"

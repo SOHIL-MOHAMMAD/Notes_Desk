@@ -16,7 +16,7 @@ const Login = () => {
     setLoading(true)
     const payload = { email: email, password: password }
     try {
-      const res = await fetch('https://notes-backend-uvim.onrender.com/user/login', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user/login`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
