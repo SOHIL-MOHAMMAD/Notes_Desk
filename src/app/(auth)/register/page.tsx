@@ -18,10 +18,9 @@ const Register = () => {
     setLoading(true)
 
     const payload = { username: username, email: email, password: password }
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL 
 
     try {
-      const res = await fetch(`${backendUrl}/user/signup`, {
+      const res = await fetch(`https://notes-backend-uvim.onrender.com/user/signup`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
